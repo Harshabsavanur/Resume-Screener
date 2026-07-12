@@ -1,0 +1,24 @@
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local SQLite Database
+screening.db
+
+# Secrets & Environment variables
+.env
+
+# Uploaded resumes / static user uploads
+uploads/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini

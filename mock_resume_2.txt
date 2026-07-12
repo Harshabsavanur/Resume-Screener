@@ -1,0 +1,9 @@
+John Doe
+React Developer
+Email: john@example.com | CGPA: 7.5 | Experience: 1 year
+
+SUMMARY:
+Frontend developer with 1 year of experience building React interfaces.
+
+SKILLS:
+React, JavaScript, HTML, CSS, Git

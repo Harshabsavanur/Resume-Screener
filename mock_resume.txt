@@ -1,0 +1,16 @@
+Harsha B.S.
+Software Development Engineer
+Email: harsha@example.com | CGPA: 9.1 | Experience: 3 years
+
+PROFESSIONAL EXPERIENCE:
+Frontend Developer | TechCorp (2023 - Present)
+- Built interactive dashboards using React and CSS modules.
+- Collaborated on Flask APIs for AI-based applications.
+
+Backend Intern | CodeSoft (2022 - 2023)
+- Worked with Python, SQL, and Git version control.
+
+TECHNICAL SKILLS:
+Languages: Python, JavaScript, HTML, CSS, SQL
+Frameworks/Tools: React, Flask, Git, Docker, AWS
+Other: Machine Learning, NLP

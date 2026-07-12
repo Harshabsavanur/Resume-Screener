@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Ranking Dashboard - NexusNLP</title>
+    <link rel="stylesheet" href="style.css?v=1.5">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        if ((localStorage.getItem('theme') || 'dark') === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        }
+    </script>
+</head>
+
+<body>
+    <!-- User Bar -->
+    <div class="user-bar" id="user-bar">
+        <div>
+            <div class="user-bar-name" id="user-bar-name"></div>
+            <div class="user-bar-email" id="user-bar-email"></div>
+        </div>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+    </div>
+
+    <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <main class="container dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <button id="back-btn" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Upload
+                </button>
+                <button id="delete-session-btn" class="back-btn delete-session-btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #f87171; margin-left: 1rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    Delete Session
+                </button>
+                <button id="notify-all-btn" class="back-btn" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); color: #34d399; margin-left: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.2rem;">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Notify Shortlisted (<span id="btn-shortlist-count">0</span>)
+                </button>
+                <div class="header-titles">
+                    <h1>Nexus<span class="highlight">NLP</span> Dashboard</h1>
+                    <p id="job-title-display">Screening Results</p>
+                </div>
+            </div>
+            <div class="job-summary-card glass" id="job-summary-card">
+                <!-- Short list of requirements -->
+                <div><strong>Min Experience:</strong> <span id="req-exp">-</span> yrs</div>
+                <div><strong>Min CGPA:</strong> <span id="req-cgpa">-</span></div>
+            </div>
+        </header>
+
+        <!-- Analytics Overview Panel -->
+        <section class="panel glass analytics-panel" style="margin-bottom: 2rem; padding: 1.5rem 2rem;">
+            <div class="analytics-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                <h2 style="font-size: 1.25rem; margin-bottom: 0; padding-bottom: 0; border: none;">Screening Analytics</h2>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                    Real-time shortlist status
+                </div>
+            </div>
+            
+            <div class="analytics-grid">
+                <!-- Stat Card: Total -->
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-total">Σ</div>
+                    <div>
+                        <div class="stat-label">Total Screened</div>
+                        <div id="stat-total" class="stat-number">0</div>
+                    </div>
+                </div>
+                
+                <!-- Stat Card: Shortlisted -->
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-shortlisted">✓</div>
+                    <div>
+                        <div class="stat-label">Shortlisted</div>
+                        <div id="stat-shortlisted" class="stat-number stat-number-success">0</div>
+                    </div>
+                </div>
+                
+                <!-- Stat Card: Rejected -->
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-rejected">✗</div>
+                    <div>
+                        <div class="stat-label">Not Shortlisted</div>
+                        <div id="stat-rejected" class="stat-number stat-number-danger">0</div>
+                    </div>
+                </div>
+                
+                <!-- Graph Container -->
+                <div class="chart-container" style="background: var(--input-bg); padding: 1.2rem 1.8rem; border-radius: 16px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1.5rem; justify-content: space-between; min-height: 160px;">
+                    <div style="flex: 1;">
+                        <div class="chart-header" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.8rem; border: none; padding-bottom: 0;">Shortlist Pipeline</div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--success); display: inline-block;"></span>
+                                <span>Shortlisted: <strong id="legend-shortlisted">0</strong></span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; display: inline-block;"></span>
+                                <span>Pending: <strong id="legend-pending">0</strong></span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--danger); display: inline-block;"></span>
+                                <span>Rejected: <strong id="legend-rejected">0</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="donut-chart-wrapper" style="position: relative; width: 130px; height: 130px; flex-shrink: 0; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));">
+                        <svg width="100%" height="100%" viewBox="0 0 42 42" class="donut-chart" style="overflow: visible;">
+                            <!-- Background ring -->
+                            <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="none" stroke="var(--border-color)" stroke-width="4.5" opacity="0.3"></circle>
+                            
+                            <!-- Shortlisted segment -->
+                            <circle id="donut-segment-shortlisted" cx="21" cy="21" r="15.91549430918954" fill="none" stroke="var(--success)" stroke-width="5" stroke-dasharray="0 100" stroke-dashoffset="0" transform="rotate(-90 21 21)" style="transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease;"></circle>
+                            
+                            <!-- Pending segment -->
+                            <circle id="donut-segment-pending" cx="21" cy="21" r="15.91549430918954" fill="none" stroke="var(--text-muted)" stroke-width="4.5" stroke-dasharray="100 100" stroke-dashoffset="0" transform="rotate(-90 21 21)" style="transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease; opacity: 0.5;"></circle>
+                            
+                            <!-- Rejected segment -->
+                            <circle id="donut-segment-rejected" cx="21" cy="21" r="15.91549430918954" fill="none" stroke="var(--danger)" stroke-width="5" stroke-dasharray="0 100" stroke-dashoffset="0" transform="rotate(-90 21 21)" style="transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease;"></circle>
+                        </svg>
+                        <!-- Center text -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1;">
+                            <span id="donut-percentage" style="font-size: 1.35rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">0%</span>
+                            <div style="font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Shortlisted</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="app-grid dashboard-grid">
+            <!-- Directory Panel (Left Side) -->
+            <section class="panel glass directory-panel">
+                <div class="directory-header-controls">
+                    <h2>Screened Candidates (<span id="total-candidates">0</span>)</h2>
+                    <div class="search-box">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="Search candidates or skills..." autocomplete="off">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">All</button>
+                        <button class="filter-tab" data-filter="Excellent Match">Excellent</button>
+                        <button class="filter-tab" data-filter="Good Match">Good</button>
+                        <button class="filter-tab" data-filter="Average/Low Match">Average/Low</button>
+                    </div>
+                </div>
+
+                <div class="candidates-table-wrapper">
+                    <table class="candidates-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 12%; text-align: center;">Rank</th>
+                                <th style="width: 53%;">Candidate</th>
+                                <th style="width: 15%; text-align: center;">Score</th>
+                                <th style="width: 20%; text-align: right;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidates-list-tbody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div id="no-candidates-message" class="empty-state-small" style="display: none;">
+                        No candidates match the active search or filters.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inspection Panel (Right Side) -->
+            <section class="panel glass inspection-panel" id="inspection-panel">
+                <!-- Empty State -->
+                <div class="empty-inspection" id="empty-inspection">
+                    <div class="inspection-placeholder-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3>Inspect Candidate</h3>
+                    <p>Select any candidate from the ranked directory list on the left to inspect their matching details, parsed CGPA/experience, and custom skills breakdown.</p>
+                </div>
+
+                <!-- Inspection Details (Populated via JS) -->
+                <div class="inspection-details" id="inspection-details" style="display: none;">
+                    <div class="candidate-detail-header">
+                        <div>
+                            <h2 id="inspected-name">John Doe</h2>
+                            <p id="inspected-filename">john_doe_resume.pdf</p>
+                            <p id="inspected-email" style="font-size: 0.95rem; color: var(--primary); margin-top: 0.2rem; font-weight: 500;"></p>
+                        </div>
+                    </div>
+
+                    <!-- Modern Tabs Navigation -->
+                    <div class="inspection-tabs" style="display: flex; border-bottom: 2px solid var(--border-color); margin-top: 1.5rem; margin-bottom: 1.2rem; gap: 0.5rem;">
+                        <button class="inspection-tab active" data-tab="overview" style="background: none; border: none; border-bottom: 3px solid var(--primary); color: var(--primary); font-weight: 600; font-size: 0.95rem; padding: 0.6rem 1rem; cursor: pointer; transition: all 0.2s;">Overview</button>
+                        <button class="inspection-tab" data-tab="skills" style="background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; padding: 0.6rem 1rem; cursor: pointer; transition: all 0.2s;">Skills & Metrics</button>
+                        <button class="inspection-tab" data-tab="actions" style="background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; padding: 0.6rem 1rem; cursor: pointer; transition: all 0.2s;">Action Center</button>
+                    </div>
+
+                    <!-- Tab 1: Overview -->
+                    <div class="tab-pane active" id="tab-overview">
+                        <div class="score-header" style="margin-top: 1rem; margin-bottom: 1.2rem;">
+                            <div class="score-circle">
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <circle class="circle-bg" cx="18" cy="18" r="15.9155" />
+                                    <path class="circle" id="score-circle-path" stroke-dasharray="0, 100" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <text x="18" y="20.35" class="percentage" id="score-text">0%</text>
+                                </svg>
+                            </div>
+                            <div class="score-info">
+                                <h3>Screening Match</h3>
+                                <p id="score-status">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Matplotlib visual candidate profile chart -->
+                        <div class="matplotlib-chart-container" style="margin-top: 1rem; text-align: center;">
+                            <h3 class="details-title" style="margin-bottom: 0.6rem; font-size: 1.05rem; text-align: left;">Matplotlib Visual Profile</h3>
+                            <img id="inspected-chart" src="" alt="Candidate Metrics Chart" style="width: 100%; border-radius: 12px; border: 1px solid var(--border-color); background: var(--input-bg); min-height: 180px;">
+                        </div>
+
+                        <div class="summary-section" id="summary-section" style="margin-top: 1.2rem; background: var(--input-bg); padding: 1.2rem; border-radius: 14px; border: 1px solid var(--border-color);">
+                            <h3 class="details-title" style="margin-bottom: 0.5rem; font-size: 1.05rem;">AI Candidate Summary</h3>
+                            <p id="inspected-summary" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); font-style: italic;"></p>
+                        </div>
+
+                        <!-- Original Resume View Button -->
+                        <div style="margin-top: 1.2rem;">
+                            <a id="btn-view-resume" class="back-btn" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; text-decoration: none; padding: 0.8rem 1rem; box-shadow: var(--glass-shadow); font-weight: 600;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                View Original Resume
+                            </a>
+                        </div>
+
+                        <!-- Shortlist Decision Section -->
+                        <div class="decision-section" style="margin-top: 1.2rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem;">
+                            <h3 class="details-title" style="margin-bottom: 0.8rem;">Shortlist Decision</h3>
+                            <div class="decision-buttons" style="display: flex; gap: 1rem;">
+                                <button id="btn-shortlist" class="decision-btn btn-shortlist" title="Shortlist Candidate">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Shortlist
+                                </button>
+                                <button id="btn-reject" class="decision-btn btn-reject" title="Reject Candidate">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem;">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Skills & Metrics -->
+                    <div class="tab-pane" id="tab-skills" style="display: none;">
+                        <div class="metrics-container" style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1rem;">
+                            <!-- Progress Bars -->
+                            <div class="metrics-grid" style="display: flex; flex-direction: column; gap: 1.2rem;">
+                                <div class="metric">
+                                    <span class="metric-label">Skills Match <span class="metric-value"></span></span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Project Relevance <span class="metric-value"></span></span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Experience Check <span class="metric-value"></span></span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">CGPA Requirement <span class="metric-value"></span></span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Radar Profile Visual Chart -->
+                            <div class="radar-chart-card" style="background: var(--input-bg); border-radius: 16px; border: 1px solid var(--border-color); padding: 1rem; display: flex; justify-content: center; align-items: center; max-width: 250px; margin: 0 auto; aspect-ratio: 1/1;">
+                                <svg width="100%" height="100%" viewBox="0 0 120 120" style="overflow: visible;">
+                                    <!-- Grid Lines -->
+                                    <polygon points="60,20 100,60 60,100 20,60" fill="none" stroke="var(--border-color)" stroke-width="0.5" stroke-dasharray="2,2" />
+                                    <polygon points="60,30 90,60 60,90 30,60" fill="none" stroke="var(--border-color)" stroke-width="0.5" stroke-dasharray="2,2" />
+                                    <polygon points="60,40 80,60 60,80 40,60" fill="none" stroke="var(--border-color)" stroke-width="0.5" stroke-dasharray="2,2" />
+                                    <polygon points="60,50 70,60 60,70 50,60" fill="none" stroke="var(--border-color)" stroke-width="0.5" stroke-dasharray="2,2" />
+                                    
+                                    <!-- Axes Lines -->
+                                    <line x1="60" y1="15" x2="60" y2="105" stroke="var(--border-color)" stroke-width="0.5" />
+                                    <line x1="15" y1="60" x2="105" y2="60" stroke="var(--border-color)" stroke-width="0.5" />
+                                    
+                                    <!-- Labels -->
+                                    <text x="60" y="12" text-anchor="middle" font-size="5" fill="var(--text-muted)" font-weight="600">SKILLS</text>
+                                    <text x="108" y="62" text-anchor="start" font-size="5" fill="var(--text-muted)" font-weight="600">RELEVANCE</text>
+                                    <text x="60" y="112" text-anchor="middle" font-size="5" fill="var(--text-muted)" font-weight="600">EXP</text>
+                                    <text x="12" y="62" text-anchor="end" font-size="5" fill="var(--text-muted)" font-weight="600">CGPA</text>
+                                    
+                                    <!-- Candidate Area Polygon -->
+                                    <polygon id="radar-polygon" points="60,60 60,60 60,60 60,60" fill="rgba(249, 115, 22, 0.25)" stroke="var(--primary)" stroke-width="1.5" style="transition: points 0.8s cubic-bezier(0.4, 0, 0.2, 1); filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.15));" />
+                                    
+                                    <!-- Markers -->
+                                    <circle id="radar-dot-skills" cx="60" cy="60" r="2.5" fill="var(--primary)" style="transition: cy 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                                    <circle id="radar-dot-relevance" cx="60" cy="60" r="2.5" fill="var(--primary)" style="transition: cx 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                                    <circle id="radar-dot-exp" cx="60" cy="60" r="2.5" fill="var(--primary)" style="transition: cy 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                                    <circle id="radar-dot-cgpa" cx="60" cy="60" r="2.5" fill="var(--primary)" style="transition: cx 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="details-report" id="details-report" style="margin-top: 1.5rem;">
+                            <h3 class="details-title">Screening Breakdown</h3>
+                            <div class="details-grid" style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div class="details-card">
+                                    <h4>Skills Check</h4>
+                                    <div id="skills-list-container"></div>
+                                </div>
+                                <div class="details-card">
+                                    <h4>Requirements Check</h4>
+                                    <div id="requirements-list-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Action Center -->
+                    <div class="tab-pane" id="tab-actions" style="display: none;">
+                        <!-- Email Notification Section -->
+                        <div id="email-notification-section" style="margin-top: 1rem;">
+                            <h3 class="details-title" style="margin-bottom: 0.8rem;">Shortlist Notification</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                <div class="form-row" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 0.5rem;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="candidate-email-input">Candidate Email Address</label>
+                                        <input type="email" id="candidate-email-input" placeholder="candidate@example.com" autocomplete="off" style="padding: 0.6rem 1rem !important; font-size: 0.95rem !important;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="company-name-input">Company Name</label>
+                                        <input type="text" id="company-name-input" placeholder="e.g. Nexus Corp" value="NexusNLP" autocomplete="off" style="padding: 0.6rem 1rem !important; font-size: 0.95rem !important;">
+                                    </div>
+                                </div>
+                                <button id="btn-send-email" class="primary-btn" style="width: 100%; margin-bottom: 0; padding: 0.8rem 1.2rem; font-size: 0.95rem; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    <span class="btn-text">Send Shortlist Email</span>
+                                    <div class="loader" style="display: none; width: 16px; height: 16px; border-width: 2px; border-top-color: white;"></div>
+                                </button>
+                                <p id="email-status-msg" style="font-size: 0.85rem; display: none; font-weight: 500;"></p>
+                            </div>
+                        </div>
+
+                        <!-- Candidate Notes Section & Delete Actions -->
+                        <div class="candidate-actions" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                            <h3 class="details-title" style="margin-bottom: 0.8rem;">Recruiter Notes</h3>
+                            <textarea id="candidate-notes" rows="4" placeholder="Add custom screening notes, interview feedback, or remarks here..." style="width: 100%; border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 10px; background: rgba(0,0,0,0.1); color: var(--text-main); font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                            <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: space-between; align-items: center;">
+                                <button id="delete-candidate-btn" class="back-btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 0.9rem; padding: 0.6rem 1rem; margin: 0; transform: none;">
+                                    Delete Candidate
+                                </button>
+                                <button id="save-notes-btn" class="primary-btn" style="width: auto; padding: 0.6rem 1.5rem; font-size: 0.9rem; border-radius: 10px; margin: 0;">
+                                    <span class="btn-text">Save Notes</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Bulk Email Modal -->
+    <div id="bulk-email-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; margin-bottom: 1.2rem;">
+                <h2 style="font-size: 1.4rem; font-weight: 600; color: var(--text-main); margin: 0;">Bulk Shortlist Notifications</h2>
+                <button id="close-modal-btn" class="icon-btn" title="Close Modal" style="border-radius: 50%; width: 32px; height: 32px; font-size: 1.2rem; line-height: 1; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: all 0.2s;">&times;</button>
+            </div>
+            
+            <!-- SMTP Status Notification Banner -->
+            <div id="modal-smtp-banner" class="smtp-banner" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; border-radius: 12px; margin-bottom: 1.2rem; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); font-size: 0.9rem;">
+                <span class="banner-badge" id="smtp-banner-badge" style="padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(245, 158, 11, 0.2); color: var(--warning);">Checking...</span>
+                <span class="banner-text" id="smtp-banner-text" style="color: var(--text-main); font-weight: 500;">Verifying SMTP configuration...</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="bulk-company-name-input">Company Name</label>
+                <input type="text" id="bulk-company-name-input" placeholder="e.g. Nexus Corp" value="NexusNLP" autocomplete="off" style="padding: 0.6rem 1rem !important; font-size: 0.95rem !important;">
+            </div>
+
+            <h3 class="details-title" style="margin-bottom: 0.3rem; font-size: 1.05rem;">Shortlisted Candidates (<span id="modal-candidates-count">0</span>)</h3>
+            <p class="upload-hint" style="margin-bottom: 1rem; font-size: 0.85rem;">Verify or edit candidate email addresses before sending notifications.</p>
+
+            <div class="modal-candidates-list-wrapper" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 14px; background: var(--input-bg); margin-bottom: 1rem; padding: 0.5rem 1rem;">
+                <table class="modal-candidates-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <th style="width: 40%; text-align: left; padding: 0.6rem 0;">Candidate</th>
+                            <th style="width: 45%; text-align: left; padding: 0.6rem 0;">Email Address</th>
+                            <th style="width: 15%; text-align: right; padding: 0.6rem 0;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-candidates-tbody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="bulk-progress-container" style="display: none; margin-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 500; margin-bottom: 0.4rem;">
+                    <span id="bulk-progress-label">Sending emails...</span>
+                    <span id="bulk-progress-percent">0%</span>
+                </div>
+                <div class="progress-bar" style="height: 8px; background: var(--secondary); border-radius: 6px; overflow: hidden; width: 100%;">
+                    <div id="bulk-progress-bar" class="progress" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem;">
+                <button id="bulk-cancel-btn" class="back-btn" style="margin: 0; padding: 0.6rem 1.2rem; transform: none; box-shadow: none;">Cancel</button>
+                <button id="bulk-send-btn" class="primary-btn" style="width: auto; margin: 0; padding: 0.6rem 1.5rem; font-size: 0.95rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);">
+                    <span class="btn-text">Send Notifications</span>
+                    <div class="loader" style="display: none; width: 16px; height: 16px; border-width: 2px; border-top-color: white;"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

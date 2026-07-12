@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusNLP — Smart Resume Screening System</title>
+    <meta name="description" content="AI-powered resume screening system using NLP to rank and evaluate candidates automatically.">
+    <link rel="stylesheet" href="style.css?v=1.5">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        if ((localStorage.getItem('theme') || 'dark') === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        }
+    </script>
+</head>
+
+<body>
+    <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <main class="login-page">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">AI-Powered Recruitment</div>
+                <h1>Nexus<span class="highlight">NLP</span></h1>
+                <p class="hero-subtitle">Smart Resume Screening System</p>
+                <p class="hero-description">
+                    Leverage Natural Language Processing to automatically parse, analyze, and rank candidates 
+                    from up to 100 resumes at once. Extract skills, CGPA, experience — and find the perfect match instantly.
+                </p>
+
+                <!-- Feature Cards -->
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <h3>NLP Resume Parsing</h3>
+                        <p>Automatically extracts name, skills, CGPA, and experience from PDF, DOCX, and TXT files using regex and text analysis.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <h3>Cosine Similarity Scoring</h3>
+                        <p>Computes bag-of-words cosine similarity between resume content and job description for deep relevance matching.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h3>Bulk Screening (100 Resumes)</h3>
+                        <p>Upload and rank up to 100 candidates simultaneously. Get instant ranked results with match percentages and status badges.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                            </svg>
+                        </div>
+                        <h3>SQLite Database</h3>
+                        <p>All screening sessions are persisted with full CRUD operations — insert, update, delete, and retrieve past results anytime.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <h3>Interactive Dashboard</h3>
+                        <p>Animated score circles, filterable directory, candidate inspection panel, recruiter notes, and detailed skill breakdowns.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h3>Weighted Scoring</h3>
+                        <p>Skills (40%), Job Relevance (30%), Experience (15%), CGPA (15%) — a balanced, configurable scoring formula for fair ranking.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section class="login-section">
+            <div class="login-card glass">
+                <div class="login-card-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access the screening dashboard</p>
+                </div>
+
+                <!-- Tab Switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Sign In</button>
+                    <button class="auth-tab" data-tab="register">Create Account</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" placeholder="admin@nexusnlp.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" required>
+                            <button type="button" class="toggle-pw-btn" data-target="login-password" title="Show password">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="login-error" class="auth-error" style="display: none;"></div>
+                    <button type="submit" class="primary-btn auth-submit-btn" id="login-btn">
+                        <span class="btn-text">Sign In</span>
+                        <div class="loader" style="display: none;"></div>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" placeholder="Your full name" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" placeholder="you@example.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="register-password" placeholder="Min 6 characters" autocomplete="new-password" required minlength="6">
+                            <button type="button" class="toggle-pw-btn" data-target="register-password" title="Show password">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="register-error" class="auth-error" style="display: none;"></div>
+                    <div id="register-success" class="auth-success" style="display: none;"></div>
+                    <button type="submit" class="primary-btn auth-submit-btn" id="register-btn">
+                        <span class="btn-text">Create Account</span>
+                        <div class="loader" style="display: none;"></div>
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Default credentials: <strong>admin@nexusnlp.com</strong> / <strong>admin123</strong></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

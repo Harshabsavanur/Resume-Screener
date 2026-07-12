@@ -1,0 +1,9 @@
+Alice Smith
+UI/UX Designer
+Email: alice@example.com | CGPA: 6.2 | Experience: 0 years
+
+SUMMARY:
+Creative UI/UX Designer interested in web layout design.
+
+SKILLS:
+Figma, Photoshop, Illustrator, Wireframing
